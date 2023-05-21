@@ -1,6 +1,6 @@
 import { ApolloServer } from '@apollo/server';
+import { gql } from '@apollo/client';
 import { startServerAndCreateNextHandler } from '@as-integrations/next';
-import { gql } from 'graphql-tag';
 
 const typeDefs = gql`
   type Query {
