@@ -10,7 +10,7 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    hello: () => 'world',
+    hello: () => 'Apollo Server is up & running on /graphql',
   },
 };
 
@@ -22,9 +22,15 @@ const server = new ApolloServer({
 const handler = startServerAndCreateNextHandler(server);
 
 export async function GET(request: Request) {
-  return handler(request);
+  const response = await handler(request);
+  response.headers.set('Access-Control-Allow-Origin', '*');
+  response.headers.set('Access-Control-Allow-Credentials', 'true');
+  return response;
 }
 
 export async function POST(request: Request) {
-  return handler(request);
+  const response = await handler(request);
+  response.headers.set('Access-Control-Allow-Origin', '*');
+  response.headers.set('Access-Control-Allow-Credentials', 'true');
+  return response;
 }

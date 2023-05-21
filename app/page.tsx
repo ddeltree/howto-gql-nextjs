@@ -1,12 +1,6 @@
 'use client';
 import { useQuery, gql } from '@apollo/client';
 
-// import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
-// const client = new ApolloClient({
-//   uri: '/graphql',
-//   cache: new InMemoryCache(),
-// });
-
 const GET_DATA = gql`
   query Query {
     hello
@@ -21,6 +15,7 @@ export default function Home() {
 
   return (
     <main>
+      <p>This is a very fancy NextJS app</p>
       <div>{data.hello}</div>
     </main>
   );
