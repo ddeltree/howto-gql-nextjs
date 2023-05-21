@@ -17,6 +17,7 @@ const resolvers = {
 const server = new ApolloServer({
   resolvers,
   typeDefs,
+  introspection: true,
 });
 
 const handler = startServerAndCreateNextHandler(server);
