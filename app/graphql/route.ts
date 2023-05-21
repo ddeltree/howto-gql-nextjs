@@ -34,3 +34,10 @@ export async function POST(request: Request) {
   response.headers.set('Access-Control-Allow-Credentials', 'true');
   return response;
 }
+
+export async function OPTIONS(request: Request) {
+  const response = new Response(undefined, { status: 200 });
+  response.headers.set('Access-Control-Allow-Origin', '*');
+  response.headers.set('Access-Control-Allow-Credentials', 'true');
+  return response;
+}
