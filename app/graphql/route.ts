@@ -1,18 +1,7 @@
 import { ApolloServer } from '@apollo/server';
-import { gql } from '@apollo/client';
 import { startServerAndCreateNextHandler } from '@as-integrations/next';
-
-const typeDefs = gql`
-  type Query {
-    hello: String
-  }
-`;
-
-const resolvers = {
-  Query: {
-    hello: () => 'Apollo Server is up & running on /graphql',
-  },
-};
+import typeDefs from '@/graphql/schemas/hello';
+import resolvers from '@/graphql/resolvers/hello';
 
 const server = new ApolloServer({
   resolvers,

@@ -1,34 +1,179 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# How to setup Apollo Server & GraphQL on a NextJS API route
 
-## Getting Started
+<br/>
 
-First, run the development server:
+`1. Install the dependencies`
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+# NextJS with App Router
+npx create-next-app@canary . --ts
+npm i @apollo/client @apollo/server @as-integrations/next graphql encoding
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`2. Create your type definitions and their resolvers`<br/>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+[<p align="right">/graphql/<b>schemas</b>/hello.ts</p>](graphql/schemas/hello.ts)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+```ts
+import { gql } from '@apollo/client';
 
-## Learn More
+const typeDefs = gql`
+  type Query {
+    hello: String
+  }
+`;
+export default typeDefs;
+```
 
-To learn more about Next.js, take a look at the following resources:
+[<p align="right">/graphql/<b>resolvers</b>/hello.ts</p>](graphql/resolvers/hello.ts)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```ts
+const resolvers = {
+  Query: {
+    hello: () => 'Apollo Server is up & running on /graphql',
+  },
+};
+export default resolvers;
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+`3. Run Apollo Server on /graphql`
 
-## Deploy on Vercel
+[<p align="right">/app/graphql/route.ts</p>](app/graphql/route.ts)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```ts
+import { ApolloServer } from '@apollo/server';
+import { startServerAndCreateNextHandler } from '@as-integrations/next';
+import typeDefs from '@/graphql/schemas/hello';
+import resolvers from '@/graphql/resolvers/hello';
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+const server = new ApolloServer({
+  resolvers,
+  typeDefs,
+});
+
+const handler = startServerAndCreateNextHandler(server);
+
+export async function GET(request: Request) {
+  const response = await handler(request);
+  return response;
+}
+
+export async function POST(request: Request) {
+  const response = await handler(request);
+  return response;
+}
+```
+
+`4. Enable introspection` - getting the schema on prod, after deploying to Vercel
+
+[<p align="right">/app/graphql/route.ts</p>](app/graphql/route.ts)
+
+```ts
+//...
+
+const server = new ApolloServer({
+  resolvers,
+  typeDefs,
+  introspection: true,
+});
+
+/** Enable CORS to be able to query on Apollo Studio or elsewhere */
+export async function OPTIONS(request: Request) {
+  const response = new Response(undefined, { status: 200 });
+  response.headers.set('Access-Control-Allow-Origin', '*');
+  response.headers.set('Access-Control-Allow-Credentials', 'true');
+  response.headers.set(
+    'Access-Control-Allow-Methods',
+    'GET,OPTIONS,PATCH,DELETE,POST,PUT',
+  );
+  response.headers.set(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version',
+  );
+  return response;
+}
+
+// Add these lines to GET and POST
+response.headers.set('Access-Control-Allow-Origin', '*');
+response.headers.set('Access-Control-Allow-Credentials', 'true');
+```
+
+`5. Deploy to` [Vercel](vercel.com) ` and create your supergraph on` [Apollo Studio](studio.apollographql.com) `using your vercel graphql endpoint`
+
+<br/>
+
+`6. Install the Apollo GraphQL vscode extension to get Intellisense in your queries`
+
+<br/>
+
+`7. Create` [/apollo.config.js](apollo.config.js)
+
+```javascript
+module.exports = {
+  client: {
+    // your supergraph's ID@variant
+    service: 'davi-alexandres-team-rsnxw@main',
+    // where intellisense will work
+    includes: ['./app/**/*.ts{,x}'],
+    excludes: ['./graphql/schemas/**'],
+  },
+};
+```
+
+`8. Create an API key on Apollo Studio`
+
+- Go to Personal Settings --> API Keys
+- Create <b>/.env</b> and put it on .gitignore
+- Put the created key into <b>/.env</b> as:
+
+```
+APOLLO_KEY=...
+```
+
+<br/>
+
+## IntelliSense should be working now 👍
+
+![](/public/intellisense.png)
+
+<br/>
+
+## <b> Making a query </b>
+
+<hr/>
+
+[<p align="right">/app/layout.tsx</p>](app/layout.tsx)
+
+```ts
+//...
+const client = new ApolloClient({
+  uri: '/graphql',
+  cache: new InMemoryCache(),
+});
+
+//...
+<ApolloProvider client={client}>
+  <body>{children}</body>
+</ApolloProvider>;
+//...
+```
+
+[<p align="right">/app/page.tsx</p>](app/page.tsx)
+
+```ts
+//...
+const GET_DATA = gql`
+  query Query {
+    hello
+  }
+`;
+
+export default function Home() {
+  const { loading, error, data } = useQuery(GET_DATA);
+  //...
+  return (
+    //...
+    <a href="/graphql">{data.hello}</a>
+  );
+}
+```

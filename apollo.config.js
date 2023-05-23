@@ -1,8 +1,7 @@
 module.exports = {
   client: {
-    service: {
-      name: 'Testando',
-      url: 'http://127.0.0.1:3000/graphql',
-    },
+    service: 'davi-alexandres-team-rsnxw@main',
+    includes: ['./app/**/*.ts{,x}'],
+    excludes: ['**/__tests__/**', './app/graphql/**'],
   },
 };

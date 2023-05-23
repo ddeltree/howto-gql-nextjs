@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <main>
       <p>This is a very fancy NextJS app</p>
-      <div>{data.hello}</div>
+      <a href="/graphql">{data.hello}</a>
     </main>
   );
 }
