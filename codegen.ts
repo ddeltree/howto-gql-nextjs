@@ -2,8 +2,10 @@ import type { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: 'http://localhost:3000/graphql',
-  // schema: 'graphql/schemas/*.ts',
+  schema:
+    process.env.NODE_ENV === 'development'
+      ? 'http://localhost:3000/graphql'
+      : 'https://graph-ql-nextjs.vercel.app/graphql',
   documents: 'app/**/*.tsx',
   generates: {
     'graphql/types/': {
