@@ -1,11 +1,12 @@
 'use client';
-import { useQuery, gql } from '@apollo/client';
+import { useQuery } from '@apollo/client';
+import { graphql } from '@/graphql/types/';
 
-const GET_DATA = gql`
+const GET_DATA = graphql(`
   query Query {
     hello
   }
-`;
+`);
 
 export default function Home() {
   const { loading, error, data } = useQuery(GET_DATA);
@@ -16,7 +17,7 @@ export default function Home() {
   return (
     <main>
       <p>This is a very fancy NextJS app</p>
-      <a href="/graphql">{data.hello}</a>
+      <a href="/graphql">{data?.hello}</a>
     </main>
   );
 }
