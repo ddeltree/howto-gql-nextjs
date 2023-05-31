@@ -6,11 +6,15 @@ const config: CodegenConfig = {
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:3000/graphql'
       : 'https://graph-ql-nextjs.vercel.app/graphql',
-  documents: 'app/**/*.tsx',
+  documents: 'app/**/*.{ts,tsx,gql,graphql}',
   generates: {
     'graphql/types/': {
       preset: 'client',
-      plugins: ['typescript', 'typescript-resolvers'],
+      plugins: [
+        // 'typescript' gives me a duplication error in /graphql/types/graphql.ts
+        // 'typescript',
+        'typescript-resolvers',
+      ],
     },
   },
   watch: true,

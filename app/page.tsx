@@ -1,6 +1,6 @@
 'use client';
 import { useQuery } from '@apollo/client';
-import { graphql } from '@/graphql/types/';
+import { graphql } from '@/graphql/types';
 
 const GET_DATA = graphql(`
   query Query {
