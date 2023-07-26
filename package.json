@@ -1,13 +1,13 @@
 {
-  "name": "graphql-dois",
+  "name": "howto-gql-nextjs",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "graphql-codegen --config codegen.ts --watch=false && next dev",
     "build": "graphql-codegen --config codegen.ts --watch=false && next build",
     "start": "next start",
     "lint": "next lint",
-    "codegen": "graphql-codegen --config codegen.ts"
+    "codegen": "graphql-codegen --config codegen.ts --watch"
   },
   "dependencies": {
     "@apollo/client": "^3.7.14",

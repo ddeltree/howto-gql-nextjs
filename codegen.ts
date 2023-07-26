@@ -6,6 +6,7 @@ const config: CodegenConfig = {
   schema: 'graphql/schemas/**/*.{ts,tsx,gql,graphql}',
   documents: [
     'app/**/*.{ts,tsx,gql,graphql,}',
+    // if you wish to include @/src
     'src/**/*.{ts,tsx,gql,graphql,}',
     'graphql/**/*.{ts,tsx,gql,graphql}',
   ],

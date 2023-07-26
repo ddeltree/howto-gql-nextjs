@@ -1,14 +1,12 @@
+// https://www.apollographql.com/docs/devtools/apollo-config/
 module.exports = {
   client: {
-    tagName: '', // matches graphql(``)
-    service:
-      process.env.NODE_ENV === 'development'
-        ? {
-            name: 'davi-alexandres-team-rsnxw',
-            url: 'http://localhost:3000/graphql',
-          }
-        : 'davi-alexandres-team-rsnxw@main',
-    includes: ['./app/**/*.ts{,x}'],
-    excludes: ['**/__tests__/**', './app/graphql/**'],
+    tagName: `graphql.`, // matches graphql(`...`)
+    service: {
+      name: 'localhost',
+      url: 'http://localhost:3000/graphql',
+    },
+    includes: ['./app/**/*.ts{,x}', './src/**/*.ts{,x}'],
+    excludes: ['**/__tests__/**', 'graphql/**', 'node_modules/**', '*'],
   },
 };
