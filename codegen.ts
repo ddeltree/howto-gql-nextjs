@@ -6,13 +6,16 @@ const config: CodegenConfig = {
   schema: 'graphql/schemas/**/*.{ts,tsx,gql,graphql}',
   documents: [
     'app/**/*.{ts,tsx,gql,graphql,}',
-    // if you wish to include @/src
-    'src/**/*.{ts,tsx,gql,graphql,}',
     'graphql/**/*.{ts,tsx,gql,graphql}',
+    // if you wish to watch @/src, for example
+    'src/**/*.{ts,tsx,gql,graphql,}',
   ],
   generates: {
     'graphql/types/': {
       preset: 'client',
+      config: {
+        useIndexSignature: true,
+      },
       plugins: [
         // 'typescript' results in duplication error in /graphql/types/graphql.ts
         // 'typescript',

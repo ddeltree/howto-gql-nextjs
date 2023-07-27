@@ -3,7 +3,7 @@ module.exports = {
   client: {
     tagName: `graphql.`, // matches graphql(`...`)
     service: {
-      name: 'localhost',
+      name: 'local schema',
       url: 'http://localhost:3000/graphql',
     },
     includes: ['./app/**/*.ts{,x}', './src/**/*.ts{,x}'],
